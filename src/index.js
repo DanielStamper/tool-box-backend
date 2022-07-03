@@ -7,6 +7,25 @@ const pg = require("knex")({
   searchPath: ["knex", "public"],
 });
 
+const knex = require("knex")({
+  client: "pg",
+  version: "7.2",
+  connection: {
+    host: "127.0.0.1",
+    port: 3306,
+    user: "daniel",
+    password: "abc123",
+    database: "toolbox",
+  },
+});
+
+// knex({ a: 'table', b: 'table' })
+//   .select({
+//     aTitle: 'a.title',
+//     bTitle: 'b.title'
+//   })
+//   .whereRaw('?? = ??', ['a.column_1', 'b.column_2'])
+
 // const mocks = {
 //   Query: () => ({
 //     tracksForHome: () => [...new Array(9)],
