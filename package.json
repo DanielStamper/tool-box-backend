@@ -1,0 +1,22 @@
+{
+  "name": "tool-box-backend",
+  "version": "1.0.0",
+  "description": "back-end demo app for Apollo's lift-off course",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index"
+  },
+  "dependencies": {
+    "apollo-server": "^3.0.0",
+    "graphql": "^15.5.1",
+    "knex": "^2.1.0",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  },
+  "author": "Daniel Stamper",
+  "license": "MIT",
+  "private": true
+}
