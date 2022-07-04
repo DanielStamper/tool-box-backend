@@ -1,23 +1,36 @@
+require("dotenv").config();
+// console.log(process.env); // remove this after you've confirmed it working
+// import typeDefs from "./app/graphql/types";
+// import resolvers from "./app/graphql/resolvers";
+const typeDefs = require("./app/graphql/types");
+const resolvers = require("./app/graphql/resolvers");
+
 const { ApolloServer } = require("apollo-server");
-const typeDefs = require("./graphql/types/userTypes");
 
-const pg = require("knex")({
-  client: "pg",
-  connection: process.env.PG_CONNECTION_STRING,
-  searchPath: ["knex", "public"],
-});
+// const knexHandle = require("knex")({
+//   client: "pg",
+//   connection: process.env.PG_CONNECTION_STRING,
+//   searchPath: ["knex", "public"],
+// });
 
-const knex = require("knex")({
+const knexHandle = require("knex")({
   client: "pg",
   version: "7.2",
   connection: {
-    host: "127.0.0.1",
-    port: 3306,
-    user: "daniel",
-    password: "abc123",
-    database: "toolbox",
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   },
 });
+
+const createContext = async (args) => {
+  return {
+    ...args,
+    db: knexHandle,
+  };
+};
 
 // knex({ a: 'table', b: 'table' })
 //   .select({
@@ -26,36 +39,15 @@ const knex = require("knex")({
 //   })
 //   .whereRaw('?? = ??', ['a.column_1', 'b.column_2'])
 
-// const mocks = {
-//   Query: () => ({
-//     tracksForHome: () => [...new Array(9)],
-//   }),
-//   Track: () => ({
-//     id: () => "track_01",
-//     title: () => "Astro Kitty, Space Explorer",
-//     author: () => {
-//       return {
-//         name: "Grumpy Cat",
-//         photo:
-//           "https://res.cloudinary.com/dety84pbu/image/upload/v1606816219/kitty-veyron-sm_mctf3c.jpg",
-//       };
-//     },
-//     thumbnail: () =>
-//       "https://res.cloudinary.com/dety84pbu/image/upload/v1598465568/nebula_cat_djkt9r.jpg",
-//     length: () => 1210,
-//     modulesCount: () => 6,
-//   }),
+// const createContext = async (args) => {
+//   return await createAppContext({
+//     ...args,
+//     // tokenSecret: appSettings.tokenSecret,
+//     db,
+//     cores,
+//     // log: logger.log,
+//   });
 // };
-const createContext = async (args) => {
-  const db = new Database({ knexHandle, schema: appSettings.dbSchema });
-  return await createAppContext({
-    ...args,
-    // tokenSecret: appSettings.tokenSecret,
-    db,
-    cores,
-    // log: logger.log,
-  });
-};
 
 const apolloServer = new ApolloServer({
   typeDefs,
@@ -70,4 +62,7 @@ apolloServer.listen().then(() => {
     🔉  Listening on port 4000
     📭  Query at https://studio.apollographql.com/dev
 `);
+  const result = knexHandle("users").select("*").where({ name: "Dave" });
+
+  console.log(result);
 });
